@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Jobly — Azərbaycanın Ağıllı Karyera Platforması</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0a0a0f;
+      --surface: #111118;
+      --card: #16161f;
+      --accent: #6c63ff;
+      --accent2: #ff6584;
+      --accent3: #43e97b;
+      --text: #f0f0f8;
+      --muted: #7a7a9a;
+      --border: #222230;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      overflow-x: hidden;
+      min-height: 100vh;
+    }
+
+    /* BACKGROUND MESH */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 80% 50% at 20% 10%, rgba(108,99,255,0.15) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 40% at 80% 80%, rgba(255,101,132,0.10) 0%, transparent 60%),
+        radial-gradient(ellipse 50% 60% at 50% 50%, rgba(67,233,123,0.05) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* NAV */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1.2rem 5%;
+      background: rgba(10,10,15,0.85);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .logo {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 1.6rem;
+      letter-spacing: -1px;
+      background: linear-gradient(135deg, #6c63ff, #43e97b);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .nav-links { display: flex; gap: 2rem; align-items: center; }
+    .nav-links a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--text); }
+
+    .btn-nav {
+      background: var(--accent);
+      color: #fff !important;
+      padding: 0.5rem 1.2rem;
+      border-radius: 8px;
+      font-size: 0.85rem !important;
+      transition: opacity 0.2s !important;
+    }
+    .btn-nav:hover { opacity: 0.85; }
+
+    /* HERO */
+    .hero {
+      position: relative;
+      z-index: 1;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 8rem 5% 4rem;
+    }
+
+    .badge {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      background: rgba(108,99,255,0.15);
+      border: 1px solid rgba(108,99,255,0.3);
+      border-radius: 50px;
+      padding: 0.35rem 1rem;
+      font-size: 0.8rem;
+      color: #a09aff;
+      margin-bottom: 2rem;
+      animation: fadeUp 0.6s ease both;
+    }
+
+    .badge-dot {
+      width: 6px; height: 6px;
+      background: var(--accent3);
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(1.4); }
+    }
+
+    h1 {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: clamp(2.8rem, 7vw, 5.5rem);
+      line-height: 1.05;
+      letter-spacing: -2px;
+      margin-bottom: 1.5rem;
+      animation: fadeUp 0.6s 0.1s ease both;
+    }
+
+    h1 span.gradient {
+      background: linear-gradient(135deg, #6c63ff 0%, #ff6584 50%, #43e97b 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero-sub {
+      font-size: clamp(1rem, 2.5vw, 1.25rem);
+      color: var(--muted);
+      max-width: 560px;
+      line-height: 1.7;
+      margin-bottom: 3rem;
+      animation: fadeUp 0.6s 0.2s ease both;
+      font-weight: 300;
+    }
+
+    /* SEARCH BOX */
+    .search-box {
+      display: flex;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 0.5rem 0.5rem 0.5rem 1.2rem;
+      gap: 0.5rem;
+      width: 100%;
+      max-width: 580px;
+      align-items: center;
+      margin-bottom: 1.5rem;
+      animation: fadeUp 0.6s 0.3s ease both;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .search-box:focus-within {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(108,99,255,0.15);
+    }
+
+    .search-box input {
+      flex: 1;
+      background: transparent;
+      border: none;
+      outline: none;
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 1rem;
+      font-weight: 400;
+    }
+
+    .search-box input::placeholder { color: var(--muted); }
+
+    .btn-search {
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      padding: 0.75rem 1.5rem;
+      font-family: 'Syne', sans-serif;
+      font-weight: 600;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.1s;
+      white-space: nowrap;
+    }
+
+    .btn-search:hover { background: #5a52e8; transform: scale(1.02); }
+    .btn-search:active { transform: scale(0.98); }
+
+    .hero-tags {
+      display: flex; gap: 0.6rem; flex-wrap: wrap; justify-content: center;
+      animation: fadeUp 0.6s 0.4s ease both;
+    }
+
+    .tag {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 50px;
+      padding: 0.3rem 0.9rem;
+      font-size: 0.8rem;
+      color: var(--muted);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .tag:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+      background: rgba(108,99,255,0.08);
+    }
+
+    /* STATS */
+    .stats {
+      position: relative; z-index: 1;
+      display: flex; justify-content: center; gap: 3rem; flex-wrap: wrap;
+      padding: 3rem 5%;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      background: var(--surface);
+    }
+
+    .stat { text-align: center; }
+    .stat-num {
+      font-family: 'Syne', sans-serif;
+      font-size: 2.2rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, #6c63ff, #43e97b);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .stat-label { font-size: 0.85rem; color: var(--muted); margin-top: 0.3rem; }
+
+    /* FEATURES */
+    .section {
+      position: relative; z-index: 1;
+      padding: 6rem 5%;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .section-label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 1rem;
+    }
+
+    .section-title {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      font-weight: 800;
+      letter-spacing: -1px;
+      margin-bottom: 1rem;
+      line-height: 1.1;
+    }
+
+    .section-desc {
+      color: var(--muted);
+      font-size: 1rem;
+      max-width: 500px;
+      line-height: 1.7;
+      margin-bottom: 3rem;
+      font-weight: 300;
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .feature-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 2rem;
+      transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .feature-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at top left, rgba(108,99,255,0.08), transparent 60%);
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .feature-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(108,99,255,0.4);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+    }
+
+    .feature-card:hover::before { opacity: 1; }
+
+    .feature-icon {
+      width: 48px; height: 48px;
+      border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.4rem;
+      margin-bottom: 1.2rem;
+    }
+
+    .icon-purple { background: rgba(108,99,255,0.2); }
+    .icon-pink { background: rgba(255,101,132,0.2); }
+    .icon-green { background: rgba(67,233,123,0.2); }
+    .icon-orange { background: rgba(255,180,50,0.2); }
+
+    .feature-title {
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: 1.1rem;
+      margin-bottom: 0.6rem;
+    }
+
+    .feature-desc {
+      color: var(--muted);
+      font-size: 0.9rem;
+      line-height: 1.6;
+      font-weight: 300;
+    }
+
+    /* HOW IT WORKS */
+    .how-section {
+      position: relative; z-index: 1;
+      background: var(--surface);
+      padding: 6rem 5%;
+    }
+
+    .how-inner { max-width: 1200px; margin: 0 auto; }
+
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 2rem;
+      margin-top: 3rem;
+    }
+
+    .step {
+      display: flex; flex-direction: column; gap: 1rem;
+      position: relative;
+    }
+
+    .step-num {
+      font-family: 'Syne', sans-serif;
+      font-size: 3rem;
+      font-weight: 800;
+      color: var(--border);
+      line-height: 1;
+    }
+
+    .step-title {
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: 1.05rem;
+    }
+
+    .step-desc {
+      color: var(--muted);
+      font-size: 0.88rem;
+      line-height: 1.6;
+      font-weight: 300;
+    }
+
+    /* JOB CARDS PREVIEW */
+    .jobs-preview {
+      display: flex; flex-direction: column; gap: 1rem;
+      margin-top: 3rem;
+    }
+
+    .job-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 1.2rem 1.5rem;
+      display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+      transition: border-color 0.2s, transform 0.2s;
+      cursor: pointer;
+      flex-wrap: wrap;
+    }
+
+    .job-card:hover {
+      border-color: rgba(108,99,255,0.4);
+      transform: translateX(4px);
+    }
+
+    .job-left { display: flex; align-items: center; gap: 1rem; }
+
+    .company-logo {
+      width: 44px; height: 44px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.1rem;
+      font-weight: 800;
+      font-family: 'Syne', sans-serif;
+      color: white;
+      flex-shrink: 0;
+    }
+
+    .job-info h3 {
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: 0.95rem;
+      margin-bottom: 0.2rem;
+    }
+
+    .job-info p { font-size: 0.82rem; color: var(--muted); }
+
+    .job-right { display: flex; align-items: center; gap: 0.8rem; flex-wrap: wrap; }
+
+    .job-tag {
+      background: rgba(108,99,255,0.12);
+      border: 1px solid rgba(108,99,255,0.2);
+      color: #a09aff;
+      border-radius: 6px;
+      padding: 0.2rem 0.7rem;
+      font-size: 0.75rem;
+      font-weight: 500;
+    }
+
+    .job-salary {
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: 0.9rem;
+      color: var(--accent3);
+    }
+
+    .source-badge {
+      font-size: 0.7rem;
+      color: var(--muted);
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 0.15rem 0.5rem;
+    }
+
+    /* CTA */
+    .cta-section {
+      position: relative; z-index: 1;
+      padding: 6rem 5%;
+      text-align: center;
+    }
+
+    .cta-box {
+      max-width: 700px;
+      margin: 0 auto;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 28px;
+      padding: 4rem 3rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cta-box::before {
+      content: '';
+      position: absolute;
+      top: -50%; left: -50%;
+      width: 200%; height: 200%;
+      background: radial-gradient(ellipse 60% 40% at 50% 0%, rgba(108,99,255,0.15), transparent 60%);
+      pointer-events: none;
+    }
+
+    .cta-box h2 {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(1.8rem, 4vw, 2.5rem);
+      font-weight: 800;
+      letter-spacing: -1px;
+      margin-bottom: 1rem;
+    }
+
+    .cta-box p {
+      color: var(--muted);
+      margin-bottom: 2rem;
+      font-size: 1rem;
+      line-height: 1.7;
+      font-weight: 300;
+    }
+
+    .btn-cta {
+      background: linear-gradient(135deg, #6c63ff, #5a52e8);
+      color: #fff;
+      border: none;
+      border-radius: 12px;
+      padding: 0.9rem 2.5rem;
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+      box-shadow: 0 8px 24px rgba(108,99,255,0.3);
+    }
+
+    .btn-cta:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 32px rgba(108,99,255,0.4);
+    }
+
+    /* FOOTER */
+    footer {
+      position: relative; z-index: 1;
+      border-top: 1px solid var(--border);
+      padding: 2rem 5%;
+      display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem;
+      background: var(--surface);
+    }
+
+    footer .logo { font-size: 1.2rem; }
+    footer p { font-size: 0.8rem; color: var(--muted); }
+
+    /* ANIMATIONS */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .fade-in {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .fade-in.visible { opacity: 1; transform: none; }
+
+    @media (max-width: 600px) {
+      .nav-links { display: none; }
+      .stats { gap: 2rem; }
+      .cta-box { padding: 2.5rem 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <div class="logo">Jobly</div>
+    <div class="nav-links">
+      <a href="#">Vakansiyalar</a>
+      <a href="#">CV Analizi</a>
+      <a href="#">Şirkətlər</a>
+      <a href="#" class="btn-nav">Qeydiyyat</a>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="badge">
+      <span class="badge-dot"></span>
+      Azərbaycanın ilk AI karyera platforması
+    </div>
+    <h1>İşini tap.<br/><span class="gradient">Karyeranı qur.</span></h1>
+    <p class="hero-sub">
+      Bütün iş saytlarından elanlar bir yerdə. AI CV analizi, fərdi tövsiyələr və müsahibə hazırlığı.
+    </p>
+    <div class="search-box">
+      <span>🔍</span>
+      <input type="text" placeholder="Vəzifə, şirkət və ya bacarıq axtar..." />
+      <button class="btn-search">Axtar</button>
+    </div>
+    <div class="hero-tags">
+      <span class="tag">💻 IT</span>
+      <span class="tag">📊 Maliyyə</span>
+      <span class="tag">🎨 Dizayn</span>
+      <span class="tag">📣 Marketing</span>
+      <span class="tag">⚖️ Hüquq</span>
+      <span class="tag">🏗️ Tikinti</span>
+    </div>
+  </section>
+
+  <!-- STATS -->
+  <div class="stats fade-in">
+    <div class="stat">
+      <div class="stat-num">5,000+</div>
+      <div class="stat-label">Aktiv vakansiya</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">8+</div>
+      <div class="stat-label">Mənbə sayt</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">AI</div>
+      <div class="stat-label">CV Analizi</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">100%</div>
+      <div class="stat-label">Azərbaycanlı</div>
+    </div>
+  </div>
+
+  <!-- FEATURES -->
+  <div class="section fade-in">
+    <div class="section-label">Xüsusiyyətlər</div>
+    <h2 class="section-title">Niyə Jobly?</h2>
+    <p class="section-desc">Digər platformalardan fərqli olaraq Jobly sizin üçün işləyir — iş axtarmağı deyil, işi tapmağı asanlaşdırır.</p>
+
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon icon-purple">🔗</div>
+        <div class="feature-title">Bütün Elanlar Bir Yerdə</div>
+        <p class="feature-desc">Boss.az, HelloJob, JobSearch və digər saytlardan elanlar avtomatik toplanır. Artıq 8 sayta girməyə ehtiyac yoxdur.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon icon-pink">🤖</div>
+        <div class="feature-title">AI CV Analizi</div>
+        <p class="feature-desc">CV-nizi yükləyin, AI güclü və zəif tərəflərinizi müəyyən etsin, konkret təkliflər versin.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon icon-green">🎯</div>
+        <div class="feature-title">Fərdi Tövsiyələr</div>
+        <p class="feature-desc">Profilinizə əsasən ən uyğun vakansiyalar sizin üçün sıralanır. Vaxtınızı boşa xərcləməyin.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon icon-orange">🎤</div>
+        <div class="feature-title">Müsahibəyə Hazırlıq</div>
+        <p class="feature-desc">AI ilə simulyasiya müsahibəsi keçin. Sahənizə uyğun suallar, cavab təklifləri və məsləhətlər.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- JOB CARDS PREVIEW -->
+  <div class="how-section">
+    <div class="how-inner fade-in">
+      <div class="section-label">Nümunə</div>
+      <h2 class="section-title">Son Vakansiyalar</h2>
+      <p class="section-desc">Müxtəlif mənbələrdən real vaxtda toplanmış elanlar.</p>
+
+      <div class="jobs-preview">
+        <div class="job-card">
+          <div class="job-left">
+            <div class="company-logo">🏦</div>
+            <div class="job-info">
+              <h3>Frontend Developer</h3>
+              <p>ABB Bank • Bakı, Azərbaycan</p>
+            </div>
+          </div>
+          <div class="job-right">
+            <span class="job-tag">Tam gün</span>
+            <span class="source-badge">boss.az</span>
+            <span class="job-salary">1,500–2,500 ₼</span>
+          </div>
+        </div>
+
+        <div class="job-card">
+          <div class="job-left">
+            <div class="company-logo" style="background: linear-gradient(135deg,#43e97b,#38f9d7)">📊</div>
+            <div class="job-info">
+              <h3>Maliyyə Analitiki</h3>
+              <p>Kapital Bank • Bakı, Azərbaycan</p>
+            </div>
+          </div>
+          <div class="job-right">
+            <span class="job-tag">Hibrid</span>
+            <span class="source-badge">hellojob.az</span>
+            <span class="job-salary">1,200–1,800 ₼</span>
+          </div>
+        </div>
+
+        <div class="job-card">
+          <div class="job-left">
+            <div class="company-logo" style="background: linear-gradient(135deg,#ff6584,#ff9a9e)">🎨</div>
+            <div class="job-info">
+              <h3>UI/UX Dizayner</h3>
+              <p>Azercell • Bakı, Azərbaycan</p>
+            </div>
+          </div>
+          <div class="job-right">
+            <span class="job-tag">Uzaqdan</span>
+            <span class="source-badge">jobsearch.az</span>
+            <span class="job-salary">800–1,400 ₼</span>
+          </div>
+        </div>
+
+        <div class="job-card">
+          <div class="job-left">
+            <div class="company-logo" style="background: linear-gradient(135deg,#f7971e,#ffd200)">📣</div>
+            <div class="job-info">
+              <h3>SMM Mütəxəssisi</h3>
+              <p>Bakcell • Bakı, Azərbaycan</p>
+            </div>
+          </div>
+          <div class="job-right">
+            <span class="job-tag">Tam gün</span>
+            <span class="source-badge">ejob.az</span>
+            <span class="job-salary">700–1,000 ₼</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- HOW IT WORKS -->
+  <div class="section fade-in">
+    <div class="section-label">Necə işləyir</div>
+    <h2 class="section-title">3 addımda işini tap</h2>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">01</div>
+        <div class="step-title">Qeydiyyatdan keç</div>
+        <p class="step-desc">Pulsuz hesab aç, profilini doldur, bacarıqlarını əlavə et.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">02</div>
+        <div class="step-title">CV-ni yüklə</div>
+        <p class="step-desc">AI CV-ni analiz edir, tövsiyələr verir, uyğun işləri göstərir.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">03</div>
+        <div class="step-title">Müraciət et</div>
+        <p class="step-desc">Bir kliklə müraciət et, müsahibəyə hazırlaş, işi qazın.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- CTA -->
+  <div class="cta-section fade-in">
+    <div class="cta-box">
+      <h2>Karyeranı bu gün başla 🚀</h2>
+      <p>Azərbaycandakı bütün iş imkanları bir kliklə əlinizdə. Pulsuz qeydiyyat, ani giriş.</p>
+      <button class="btn-cta">Pulsuz Başla</button>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="logo">Jobly</div>
+    <p>© 2026 Jobly. Azərbaycanın ağıllı karyera platforması.</p>
+    <p style="font-size:0.75rem; color: #555">boss.az • hellojob.az • jobsearch.az • ejob.az</p>
+  </footer>
+
+  <script>
+    // Scroll fade-in
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('visible');
+          observer.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+  </script>
+</body>
+</html>
